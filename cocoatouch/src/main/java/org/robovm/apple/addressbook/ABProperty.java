@@ -15,6 +15,7 @@
  */
 package org.robovm.apple.addressbook;
 
+/*<imports>*/
 import java.io.*;
 import java.nio.*;
 import java.util.*;
@@ -27,12 +28,34 @@ import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
 import org.robovm.apple.corefoundation.*;
+/*</imports>*/
 
-@Library("AddressBook")
-public class ABProperty {
-    static { Bro.bind(ABProperty.class); }
+/*<javadoc>*/
+/*</javadoc>*/
+/*<annotations>*//*</annotations>*/
+/*<visibility>*/public/*</visibility>*/ class /*<name>*/ABProperty/*</name>*/ 
+    extends /*<extends>*/Object/*</extends>*/ 
+    /*<implements>*//*</implements>*/ {
+
+    /*<ptr>*/
+    /*</ptr>*/
+    /*<bind>*/
+    /*</bind>*/
+    /*<constants>*/
+    public static final int InvalidID = -1;
+    /*</constants>*/
     
-    public int value() {
-        return -1;
+    private final LazyGlobalValue<Integer> lazyGlobalValue;
+    
+    protected ABProperty(String getterName) {
+        lazyGlobalValue = new LazyGlobalValue<>(getClass(), getterName);
     }
+    
+    /*<constructors>*//*</constructors>*/
+    /*<properties>*//*</properties>*/
+    /*<members>*//*</members>*/
+    public int value() {
+        return lazyGlobalValue.value().intValue();
+    }
+    /*<methods>*//*</methods>*/
 }

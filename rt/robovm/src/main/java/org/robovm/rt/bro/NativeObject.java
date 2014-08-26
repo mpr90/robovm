@@ -38,6 +38,21 @@ public abstract class NativeObject {
         this.handle = handle;
     }
 
+    /**
+     * Casts this {@link NativeObject} to another {@link NativeObject} type.
+     * 
+     * @param type the type to cast to.
+     * @return a {@link NativeObject} that points to the same memory 
+     *         location as this {@link NativeObject}.
+     */
+    @SuppressWarnings("unchecked")
+    public <U extends NativeObject> U as(Class<U> type) {
+        if (getClass() == type || type.isAssignableFrom(getClass())) {
+            return (U) this;
+        }
+        return MarshalerLookup.toObject(type, handle);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
