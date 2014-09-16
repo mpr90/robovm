@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,6 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Marshaler(Bits.AsMachineSizedIntMarshaler.class)/*</annotations>*/
 public final class /*<name>*/NSStringEnumerationOptions/*</name>*/ extends Bits</*<name>*/NSStringEnumerationOptions/*</name>*/> {
     /*<values>*/
+    public static final NSStringEnumerationOptions None = new NSStringEnumerationOptions(0L);
     public static final NSStringEnumerationOptions ByLines = new NSStringEnumerationOptions(0L);
     public static final NSStringEnumerationOptions ByParagraphs = new NSStringEnumerationOptions(1L);
     public static final NSStringEnumerationOptions ByComposedCharacterSequences = new NSStringEnumerationOptions(2L);

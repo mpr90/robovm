@@ -88,7 +88,7 @@ enums:
     UIKeyboardType: {}
     UIKeyModifierFlags: {}
     UILayoutConstraintAxis: {}
-    UILayoutPriority: {}
+    UILayoutPriority: {first: UILayoutPriorityRequired}
     UILineBreakMode: {}
     UIMenuControllerArrowDirection: {}
     UIModalPresentationStyle: {}
@@ -126,7 +126,7 @@ enums:
     UITableViewCellEditingStyle: {}
     UITableViewCellSelectionStyle: {}
     UITableViewCellSeparatorStyle: {}
-    UITableViewCellStateMask: {}
+    UITableViewCellStateMask: {suffix: mask}
     UITableViewCellStyle: {}
     UITableViewRowAnimation: {}
     UITableViewScrollPosition: {}
@@ -292,6 +292,12 @@ categories:
 classes:
     UIKit:
         annotations: ['@Marshaler(NSString.AsStringMarshaler.class)']
+
+    # Custom bits
+    UIAccessibilityTraits:
+        visibility: "public final"
+        extends: "Bits<UIAccessibilityTraits>"
+        annotations: ["@Marshaler(Bits.AsMachineSizedIntMarshaler.class)"]
 
     # Structs
     UIEdgeInsets: {}
@@ -495,14 +501,14 @@ classes:
     NSTextTab: # DONE
         properties:
             'options':
-                type: "NSDictionary<NSString, ?>"
+                type: NSTextTabOptions
         methods:
             '+columnTerminatorsForLocale:':
                 name: getColumnTerminators
             '-initWithTextAlignment:location:options:':
                 parameters:
                     options:
-                        type: "NSDictionary<NSString, ?>"
+                        type: NSTextTabOptions
 
     UIAcceleration: {} # DONE
     UIAccelerometer: # DONE
@@ -510,11 +516,16 @@ classes:
             '+sharedAccelerometer':
                 name: getSharedAccelerometer
     UIAccessibilityElement: # DONE
+        properties:
+            'isAccessibilityElement':
+                name: accessibilityElement
+            'accessibilityContainer':
+                type: UIAccessibilityContainer
         methods:
             '-initWithAccessibilityContainer:':
                 parameters:
                     container:
-                        type: UIView
+                        type: UIAccessibilityContainer
     UIActionSheet: # DONE
         methods:
             '-initWithTitle:delegate:cancelButtonTitle:destructiveButtonTitle:otherButtonTitles:':
@@ -854,6 +865,7 @@ classes:
                 name: getLayoutAttributesForDecorationView
             '-layoutAttributesForElementsInRect:':
                 name: getLayoutAttributesForElements
+                return_type: "NSArray<UICollectionViewLayoutAttributes>"
             '-layoutAttributesForItemAtIndexPath:':
                 name: getLayoutAttributesForItem
             '-layoutAttributesForSupplementaryViewOfKind:atIndexPath:':
@@ -931,11 +943,11 @@ classes:
     UIColor: # DONE
         methods:
             '+(black|darkGray|lightGray|white|gray|red|green|blue|cyan|yellow|magenta|orange)Color':
-                name: "color#{g[0][0].upcase}#{g[0][1..-1]}"
-            '+(purple|brown|clear|lightText|darkText|groupTableViewBackground|viewFlipsideBackground)Color':
-                name: "color#{g[0][0].upcase}#{g[0][1..-1]}"
-            '+(scrollViewTexturedBackground|underPageBackground)Color':
-                name: "color#{g[0][0].upcase}#{g[0][1..-1]}"
+                name: "#{g[0][0].downcase}#{g[0][1..-1]}"
+            '+(purple|brown|clear|lightText|darkText)Color':
+                name: "#{g[0][0].downcase}#{g[0][1..-1]}"
+            '+(groupTableViewBackground|viewFlipsideBackground|scrollViewTexturedBackground|underPageBackground)Color':
+                name: "#{g[0][0].downcase}#{g[0][1..-1]}"
             '-initWithHue:saturation:brightness:alpha:':
                 exclude: true
             '-initWithPatternImage:':
@@ -943,17 +955,17 @@ classes:
             '-initWithWhite:alpha:':
                 exclude: true
             '+colorWithCGColor:':
-                name: createFromCGColor
+                name: fromCGColor
             '+colorWithCIColor:':
-                name: createFromCIColor
+                name: fromCIColor
             '+colorWithHue:saturation:brightness:alpha:':
-                name: createFromHSBA
+                name: fromHSBA
             '+colorWithRed:green:blue:alpha:':
-                name: createFromRGBA
+                name: fromRGBA
             '+colorWithPatternImage:':
-                name: createFromPatternImage
+                name: fromPatternImage
             '+colorWithWhite:alpha:':
-                name: createFromWhiteAlpha
+                name: fromWhiteAlpha
             '-colorWithAlphaComponent:':
                 name: addAlpha
             '-getHue:saturation:brightness:alpha:':
@@ -1176,7 +1188,11 @@ classes:
             '+fontWithDescriptor:size:':
                 name: getFont
             '+preferredFontForTextStyle:':
-                name: getPreferredFontForTextStyle
+                name: getPreferredFont
+                visibility: protected
+                parameters:
+                    style:
+                        type: NSString
             '-fontWithSize:':
                 name: getFontWithSize
             '-fontDescriptor':
@@ -1188,36 +1204,42 @@ classes:
                 name: create
                 parameters:
                     attributes:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIFontDescriptorAttributes
             '+fontDescriptorWithName:size:':
                 name: create
             '+fontDescriptorWithName:matrix:':
                 name: create
             '+preferredFontDescriptorWithTextStyle:':
                 name: getPreferredFontDescriptor
+                visibility: protected
+                parameters:
+                    style:
+                        type: NSString
             '-objectForKey:':
-                name: getObject
+                name: getValue
+                visibility: protected
                 parameters:
                     anAttribute:
                         type: NSString
             '-fontAttributes':
                 property: true
-                return_type: "NSDictionary<NSString, ?>"
+                return_type: UIFontDescriptorAttributes
             '-matchingFontDescriptorsWithMandatoryKeys:':
                 name: getMatchingFontDescriptors
                 return_type: "NSArray<UIFontDescriptor>"
+                visibility: protected
                 parameters:
                     mandatoryKeys:
                         type: "NSSet<NSString>"
             '-initWithFontAttributes:':
                 parameters:
                     attributes:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIFontDescriptorAttributes
             '-fontDescriptorByAddingAttributes:':
-                name: createWithAttributes
+                name: newWithAttributes
                 parameters:
                     attributes:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIFontDescriptorAttributes
             '-fontDescriptorWithSymbolicTraits:':
                 name: newWithSymbolicTraits
             '-fontDescriptorWithSize:':
@@ -1301,15 +1323,15 @@ classes:
             '-initWithContentsOfFile:':
                 constructor: false
             '-resizableImageWithCapInsets:':
-                name: newResizable
+                name: createResizable
             '-resizableImageWithCapInsets:resizingMode:':
-                name: newResizable
+                name: createResizable
             '-imageWithAlignmentRectInsets:':
-                name: newWithAlignment
+                name: create
             '-imageWithRenderingMode:':
-                name: newWithRenderingMode
+                name: create
             '-stretchableImageWithLeftCapWidth:topCapHeight:':
-                name: newStretchable
+                name: createStretchable
             '-drawAtPoint:':
                 name: draw
             '-drawAtPoint:blendMode:alpha:':
@@ -1349,7 +1371,12 @@ classes:
                 type: "NSArray<UIImage>"
 
     UIInputView: {} # DONE
-    UIInterpolatingMotionEffect: {} # DONE
+    UIInterpolatingMotionEffect: # DONE
+        properties:
+            'minimumRelativeValue':
+                type: NSValue
+            'maximumRelativeValue':
+                type: NSValue
     UIKeyCommand: # DONE
         methods:
             '+keyCommandWithInput:modifierFlags:action:':
@@ -1524,7 +1551,7 @@ classes:
             '-initWithTransitionStyle:navigationOrientation:options:':
                 parameters:
                     options:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIPageViewControllerOptions
             '-setViewControllers:direction:animated:completion:':
                 trim_after_first_colon: true
                 parameters:
@@ -1737,9 +1764,9 @@ classes:
             '-removeItem:':
                 trim_after_first_colon: true
             '-targetOffsetFromCenterForItem:':
-                name: getTargetOffsetFromCenterForItem
+                name: getTargetOffset
             '-setTargetOffsetFromCenter:forItem:':
-                trim_after_first_colon: true
+                name: setTargetOffset
             '-setAngle:magnitude:':
                 name: setAngleAndMagnitude
 
@@ -1972,9 +1999,12 @@ classes:
     UIStoryboard: # DONE
         methods:
             '+storyboardWithName:bundle:':
-                name: createFromName
+                name: create
+            '-instantiateInitialViewController':
+                return_type: UIViewController
             '-instantiateViewControllerWithIdentifier:':
                 name: instantiateViewController
+                return_type: UIViewController
     UIStoryboardPopoverSegue: {} # DONE
     UIStoryboardSegue: # DONE
         properties:
@@ -2013,6 +2043,8 @@ classes:
     UITabBarController: # DONE
         properties:
             'viewControllers':
+                type: "NSArray<UIViewController>"
+            'customizableViewControllers':
                 type: "NSArray<UIViewController>"
         methods:
             '-setViewControllers:animated:':
@@ -2144,9 +2176,9 @@ classes:
     UITextField: # DONE
         properties:
             'defaultTextAttributes':
-                type: "NSDictionary<NSString, ?>"
+                type: NSAttributedStringAttributes
             'typingAttributes':
-                type: "NSDictionary<NSString, ?>"
+                type: NSAttributedStringAttributes
         methods:
             '-borderRectForBounds:':
                 name: getBorderRect
@@ -2191,9 +2223,9 @@ classes:
     UITextView: # DONE
         properties:
             'linkTextAttributes':
-                type: "NSDictionary<NSString, ?>"
+                type: NSAttributedStringAttributes
             'typingAttributes':
-                type: "NSDictionary<NSString, ?>"
+                type: NSAttributedStringAttributes
         methods:
             '-scrollRangeToVisible:':
                 trim_after_first_colon: true
@@ -2251,7 +2283,7 @@ classes:
             '+animateWithDuration:delay:options:animations:completion:':
                 name: animate
             '+animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:':
-                trim_after_first_colon: true
+                name: animate
             '+transitionFromView:toView:duration:options:completion:':
                 name: transition
             '+transitionWithView:duration:options:animations:completion:':
@@ -2384,9 +2416,9 @@ classes:
             '-decodeRestorableStateWithCoder:':
                 name: decodeRestorableState
             '-snapshotViewAfterScreenUpdates:':
-                name: snapshotView
+                name: getSnapshot
             '-resizableSnapshotViewFromRect:afterScreenUpdates:withCapInsets:':
-                name: resizableSnapshotView
+                name: getResizableSnapshot
             '-drawViewHierarchyInRect:afterScreenUpdates:':
                 name: drawViewHierarchy
             '-endEditing:':
@@ -2480,6 +2512,16 @@ classes:
                 name: willAnimateFirstHalfOfRotation
             '-willAnimateSecondHalfOfRotationFromInterfaceOrientation:duration:':
                 name: willAnimateSecondHalfOfRotation
+            '-preferredStatusBarStyle':
+                property: true
+            '-preferredStatusBarUpdateAnimation':
+                property: true
+            '-childViewControllerForStatusBarStyle':
+                property: true
+            '-childViewControllerForStatusBarHidden':
+                property: true
+            '-transitionCoordinator':
+                property: true
 
     UIViewPrintFormatter: {} # DONE
     UIWebView: # DONE
@@ -2492,7 +2534,7 @@ classes:
                 trim_after_first_colon: true
             '-loadData:MIMEType:textEncodingName:baseURL:':
                 trim_after_first_colon: true
-    UIWindow:
+    UIWindow: # DONE
         methods:
             '-convertPoint:fromWindow:':
                 name: convertPointFromWindow
@@ -2610,19 +2652,25 @@ protocols:
                 name: didFinishLaunching
                 parameters:
                     launchOptions:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIApplicationLaunchOptions
             '-applicationDidFinishLaunching:':
                 name: didFinishLaunching
             '-application:didReceiveLocalNotification:':
                 name: didReceiveLocalNotification
             '-application:didReceiveRemoteNotification:':
                 name: didReceiveRemoteNotification
+                parameters:
+                    userInfo:
+                        type: UIRemoteNotification
             '-application:didRegisterForRemoteNotificationsWithDeviceToken:':
                 name: didRegisterForRemoteNotifications
             "-application:handleOpenURL:":
                 name: handleOpenURL
             "-application:openURL:sourceApplication:annotation:":
                 name: openURL
+                parameters:
+                    annotation:
+                        type: NSPropertyList
             '-application:willChangeStatusBarFrame:':
                 name: willChangeStatusBarFrame
             '-application:willChangeStatusBarOrientation:duration:':
@@ -2664,9 +2712,12 @@ protocols:
                 name: willFinishLaunching
                 parameters:
                     launchOptions:
-                        type: "NSDictionary<NSString, ?>"
+                        type: UIApplicationLaunchOptions
             '-application:didReceiveRemoteNotification:fetchCompletionHandler:':
                 name: didReceiveRemoteNotification
+                parameters:
+                    userInfo:
+                        type: UIRemoteNotification
             '-application:performFetchWithCompletionHandler:':
                 name: performFetch
             '-application:handleEventsForBackgroundURLSession:completionHandler:':
@@ -2847,6 +2898,7 @@ protocols:
                 name: willShowViewController
             '-navigationControllerSupportedInterfaceOrientations:':
                 name: getSupportedInterfaceOrientations
+                return_type: UIInterfaceOrientationMask
             '-navigationControllerPreferredInterfaceOrientationForPresentation:':
                 name: getPreferredInterfaceOrientation
             '-navigationController:interactionControllerForAnimationController:':
@@ -3035,7 +3087,7 @@ protocols:
             '-splitViewControllerSupportedInterfaceOrientations:':
                 name: getSupportedInterfaceOrientations
             '-splitViewControllerPreferredInterfaceOrientationForPresentation:':
-                name:getPreferredInterfaceOrientation
+                name: getPreferredInterfaceOrientation
 
     UIStateRestoring:
         methods:
@@ -3066,6 +3118,7 @@ protocols:
                         type: "NSArray<UIViewController>"
             '-tabBarControllerSupportedInterfaceOrientations:':
                 name: getSupportedInterfaceOrientations
+                return_type: UIInterfaceOrientation
             '-tabBarControllerPreferredInterfaceOrientationForPresentation:':
                 name: getPreferredInterfaceOrientation
             '-tabBarController:interactionControllerForAnimationController:':
@@ -3097,7 +3150,7 @@ protocols:
                 parameters:
                     items:
                         type: "NSArray<UITabBarItem>"
-    UITableViewDataSource:
+    UITableViewDataSource: # DONE
         methods:
             '-numberOfSectionsInTableView:':
                 name: getNumberOfSections
@@ -3210,7 +3263,7 @@ protocols:
     UITextInput:
         properties:
             'markedTextStyle':
-                type: "NSDictionary<NSString, ?>"
+                type: UITextInputTextStyle
         methods:
             '-baseWritingDirectionForPosition:inDirection:':
                 name: getBaseWritingDirection
@@ -3248,7 +3301,7 @@ protocols:
                 name: getTextRange
             '-textStylingAtPosition:inDirection:':
                 name: getTextStyling
-                return_type: "NSDictionary<NSString, ?>"
+                return_type: UITextInputTextStyle
             '-frameForDictationResultPlaceholder:':
                 name: getDictationResultPlaceholderFrame
             '-selectionRectsForRange:':
@@ -3395,19 +3448,29 @@ protocols:
                 name: didStartLoad
 
     # Informal protocols (categories)
-    UIAccessibility: {}
+    UIAccessibility:
+        properties:
+            'isAccessibilityElement':
+                name: accessibilityElement
     UIAccessibilityAction:
         methods:
-            '-accessibilityScroll:':
-                name: accessibilityScroll
-    UIAccessibilityContainer:
+            '-accessibility(.*):':
+                name: "#{g[0][0].downcase}#{g[0][1..-1]}"
+            '-accessibility(.*)':
+                name: "#{g[0][0].downcase}#{g[0][1..-1]}"
+            
+    UIAccessibilityContainer: # DONE
         methods:
             '-accessibilityElementCount':
                 property: true
             '-accessibilityElementAtIndex:':
                 name: getAccessibilityElement
+                return_type: UIAccessibilityElement
             '-indexOfAccessibilityElement:':
                 name: indexOfAccessibilityElement
+                parameters:
+                    element:
+                        type: UIAccessibilityElement
 
     UIAccessibilityFocus: {}
     UINibLoadingAdditions: {}
@@ -3457,6 +3520,28 @@ functions:
         visibility: protected
         name: "#{g[0]}"
 
+    # UIGraphics
+    UI(RectFill)UsingBlendMode:
+        class: UIGraphics
+        name: "#{g[0]}"
+    UI(RectFrame)UsingBlendMode:
+        class: UIGraphics
+        name: "#{g[0]}"
+    UIGraphics(BeginImageContext)WithOptions:
+        class: UIGraphics
+        name: "#{g[0]}"
+    UIGraphics(BeginPDFContext.*):
+        class: UIGraphics
+        name: "#{g[0]}"
+        parameters:
+            documentInfo:
+                type: CGPDFContextOptions
+    UIGraphics(BeginPDFPage)WithInfo:
+        class: UIGraphics
+        name: "#{g[0]}"
+        parameters:
+            pageInfo:
+                type: CGPDFBoxOptions  
     UIGraphics(.*):
         class: UIGraphics
         name: "#{g[0]}"
@@ -3512,30 +3597,151 @@ functions:
     (UI.*):
         name: "Function__#{g[0]}"
 
-values: 
+values:
+    NS(TabColumnTerminatorsAttribute)Name:
+        class: NSTextTabOptions
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+    NSTextStorage(.*Notification):
+        class: NSTextStorage
+        name: "#{g[0]}"
+        type: NSString
+    NS(.*Attribute)Name:
+        class: NSAttributedStringAttribute
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+    NSTextEffect(.*):
+        class: NSTextEffect
+        name: "#{g[0]}Value"
+        type: NSString
+        visibility: protected
+
+    # UIApplication
+    UIApplicationLaunchOptions(.*Key):
+        class: UIApplicationLaunchOptions
+        name: "#{g[0]}"
+        type: NSString
+    UIApplication(.*Notification):
+        class: UIApplication
+        name: "#{g[0]}"
+        type: NSString
+    UIApplication(ProtectedDataDidBecomeAvailable|ProtectedDataWillBecomeUnavailable):
+        class: UIApplication
+        name: "#{g[0]}Notification"
+        type: NSString
+    UI(ContentSizeCategoryDidChangeNotification):
+        class: UIApplication
+        name: "#{g[0]}"
+        type: NSString
+    UIApplication(.*UserInfoKey):
+        class: UIApplication
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+    UI(ContentSizeCategoryNewValueKey):
+        class: UIApplication
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+
+    # UIDevice
+    UIDevice(.*Notification):
+        class: UIDevice
+        name: "#{g[0]}"
+        type: NSString
+
+    # UIScreen
+    UIScreen(.*Notification):
+        class: UIScreen
+        name: "#{g[0]}"
+        type: NSString
+
+    # UIWindow
+    UIWindow(.*Notification):
+        class: UIWindow
+        name: "#{g[0]}"
+        type: NSString
+    UI(Keyboard.*Notification):
+        class: UIWindow
+        name: "#{g[0]}"
+        type: NSString
+    UIKeyboard(.*)UserInfoKey:
+        class: UIKeyboardAnimation
+        name: "#{g[0]}Key"
+        type: NSString
+        visibility: protected
+    UIWindow(Level.*):
+        class: UIWindowLevel
+        name: "#{g[0]}"
+        visibility: protected
+    
+    # UIFont
+    UIFontDescriptor(.*)Attribute:
+        class: UIFontDescriptorAttribute
+        name: "#{g[0]}Value"
+        type: NSString
+        visibility: protected
+    UIFontTextStyle(.*):
+        class: UIFontTextStyle
+        name: "#{g[0]}Value"
+        type: NSString
+        visibility: protected
+    UIFont(.*Trait):
+        class: UIFontDescriptorTraits
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+    
+    # UIPageViewController
+    UIPageViewControllerOption(.*Key):
+        class: UIPageViewControllerOptions
+        name: "#{g[0]}"
+        type: NSString
+        visiblity: protected
+
+    # UIMenuController
+    UIMenuController(.*Notification):
+        class: UIMenuController
+        name: "#{g[0]}"
+        type: NSString
+
+    # UITableView
+    UITableView(.*Notification):
+        class: UITableView
+        name: "#{g[0]}"
+        type: NSString
+    
+    # UITextInput
+    UITextInputText(.*Key):
+        class: UITextInputTextStyle
+        name: "#{g[0]}"
+        type: NSString
+        visibility: protected
+
+    # UITextInputMode
+    UITextInput(.*)Notification:
+        class: UITextInputMode
+        name: "#{g[0]}"
+        type: NSString
+
+    # UITextField
+    UITextFieldText(.*Notification):
+        class: UITextField
+        name: "#{g[0]}"
+        type: NSString
+
+    # UITextView
+    UITextViewText(.*Notification):
+        class: UITextView
+        name: "#{g[0]}"
+        type: NSString
 
     UI(.*Key):
         name: "#{g[0]}"
         type: NSString
-    NS(.*Notification):
-        name: "#{g[0]}"
-        type: NSString
-    UI(.*Notification):
-        name: "#{g[0]}"
-        type: NSString
 
-    NS((Font|ParagraphStyle|ForegroundColor|BackgroundColor|Ligature)AttributeName):
-        name: "#{g[0]}"
-        type: NSString
-    NS((Kern|StrikethroughStyle|UnderlineStyle|StrokeColor|StrokeWidth)AttributeName):
-        name: "#{g[0]}"
-        type: NSString
-    NS((Shadow|TextEffect|Attachment|Link|BaselineOffset|UnderlineColor)AttributeName):
-        name: "#{g[0]}"
-        type: NSString
-    NS((StrikethroughColor|Obliqueness|Expansion|WritingDirection|VerticalGlyphForm)AttributeName):
-        name: "#{g[0]}"
-        type: NSString
     NS(.*DocumentAttribute):
         name: "#{g[0]}"
         type: NSString
@@ -3543,9 +3749,6 @@ values:
         name: "#{g[0]}"
         type: NSString
     NS(TextLayoutSection.*):
-        name: "#{g[0]}"
-        type: NSString
-    NS(TextEffect.*):
         name: "#{g[0]}"
         type: NSString
     NS(.*DocumentType):
@@ -3572,27 +3775,31 @@ values:
         name: "#{g[0]}"
         readonly: true
         type: NSString
-    UI(AccessibilityTrait.*):
-        name: "#{g[0]}"
+    UIAccessibilityTrait(.*):
+        class: UIAccessibilityTraits
+        name: "#{g[0]}Value"
+        visibility: protected
+        type: long
         readonly: true
     UI(AccessibilityAnnouncementKey.*):
         name: "#{g[0]}"
         readonly: true
         type: NSString
 
-    UI(ActivityType.*):
+    UIActivityType(.*):
+        class: UIActivityType
         name: "#{g[0]}"
+        
+    UIApplication(BackgroundFetchInterval.*):
+        class: UIApplication
+        name: "#{g[0]}"
+        
+    UIContentSizeCategory(.*):
+        class: UIContentSizeCategory
+        name: "#{g[0]}Value"
+        visibility: protected
+        type: NSString
 
-    UI(ApplicationProtectedData.*):
-        name: "#{g[0]}"
-        type: NSString
-    UI(ApplicationLaunchOptions.*):
-        name: "#{g[0]}"
-        type: NSString
-    UI(ApplicationBackgroundFetchInterval.*):
-        name: "#{g[0]}"
-    UI(ContentSizeCategory.*):
-        name: "#{g[0]}"
     UI(TrackingRunLoopMode):
         name: "#{g[0]}"
     UIApplicationInvalidInterfaceOrientationException:
@@ -3608,14 +3815,6 @@ values:
     UI(EdgeInsetsZero):
         name: "#{g[0]}"
 
-    UI(FontDescriptor.*Attribute):
-        name: "#{g[0]}"
-        type: NSString
-    UI(FontTextStyle.*):
-        name: "#{g[0]}"
-    UI(Font.*Trait):
-        name: "#{g[0]}"
-        type: NSString
     UI(FontFeature.*):
         name: "#{g[0]}"
         type: NSString
@@ -3662,9 +3861,6 @@ values:
 
     UIViewControllerHierarchyInconsistencyException:
         exclude: true
-
-    UI(WindowLevel.*):
-        name: "#{g[0]}"
 
     # Make sure we don't miss any values if new ones are introduced in a later UIKit
     (NS.*):

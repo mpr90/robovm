@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.mediaplayer;
+package org.robovm.apple.coretext;
 
 /*<imports>*/
 import java.io.*;
@@ -27,33 +27,46 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
-import org.robovm.apple.uikit.*;
+import org.robovm.apple.corefoundation.*;
 import org.robovm.apple.coregraphics.*;
 /*</imports>*/
 
 /*<javadoc>*/
 
 /*</javadoc>*/
-/*<annotations>*/@Marshaler(ValuedEnum.AsMachineSizedSIntMarshaler.class)/*</annotations>*/
-public enum /*<name>*/MPMediaPlaylistAttribute/*</name>*/ implements ValuedEnum {
+/*<annotations>*/@Marshaler(ValuedEnum.AsUnsignedShortMarshaler.class)/*</annotations>*/
+public enum /*<name>*/CTCharacterCollection/*</name>*/ implements ValuedEnum {
     /*<values>*/
-    None(0L),
-    OnTheGo(1L),
-    Smart(2L),
-    Genius(4L);
+    CharacterCollectionIdentityMapping(0L),
+    CharacterCollectionAdobeCNS1(1L),
+    CharacterCollectionAdobeGB1(2L),
+    CharacterCollectionAdobeJapan1(3L),
+    CharacterCollectionAdobeJapan2(4L),
+    CharacterCollectionAdobeKorea1(5L),
+    IdentityMappingCharacterCollection(0L),
+    AdobeCNS1CharacterCollection(1L),
+    AdobeGB1CharacterCollection(2L),
+    AdobeJapan1CharacterCollection(3L),
+    AdobeJapan2CharacterCollection(4L),
+    AdobeKorea1CharacterCollection(5L);
     /*</values>*/
+
+    /*<bind>*/
+    /*</bind>*/
+    /*<constants>*//*</constants>*/
+    /*<methods>*//*</methods>*/
 
     private final long n;
 
-    private /*<name>*/MPMediaPlaylistAttribute/*</name>*/(long n) { this.n = n; }
+    private /*<name>*/CTCharacterCollection/*</name>*/(long n) { this.n = n; }
     public long value() { return n; }
-    public static /*<name>*/MPMediaPlaylistAttribute/*</name>*/ valueOf(long n) {
-        for (/*<name>*/MPMediaPlaylistAttribute/*</name>*/ v : values()) {
+    public static /*<name>*/CTCharacterCollection/*</name>*/ valueOf(long n) {
+        for (/*<name>*/CTCharacterCollection/*</name>*/ v : values()) {
             if (v.n == n) {
                 return v;
             }
         }
         throw new IllegalArgumentException("No constant with value " + n + " found in " 
-            + /*<name>*/MPMediaPlaylistAttribute/*</name>*/.class.getName());
+            + /*<name>*/CTCharacterCollection/*</name>*/.class.getName());
     }
 }

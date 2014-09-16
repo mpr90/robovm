@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,6 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Marshaler(Bits.AsMachineSizedIntMarshaler.class)/*</annotations>*/
 public final class /*<name>*/NSCalendarOptions/*</name>*/ extends Bits</*<name>*/NSCalendarOptions/*</name>*/> {
     /*<values>*/
+    public static final NSCalendarOptions None = new NSCalendarOptions(0L);
     public static final NSCalendarOptions WrapComponents = new NSCalendarOptions(1L);
     /**
      * @since Available in iOS 7.0 and later.

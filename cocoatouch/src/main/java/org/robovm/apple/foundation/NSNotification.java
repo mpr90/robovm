@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -46,7 +47,7 @@ import org.robovm.apple.security.*;
     /**
      * @since Available in iOS 4.0 and later.
      */
-    public NSNotification(NSString name, NSObject object, NSDictionary<NSString, ?> userInfo) { super((SkipInit) null); initObject(initWithName$object$userInfo$(name, object, userInfo)); }
+    public NSNotification(NSString name, NSObject object, NSDictionary<NSString, NSObject> userInfo) { super((SkipInit) null); initObject(initWithName$object$userInfo$(name, object, userInfo)); }
     /*</constructors>*/
     /*<properties>*/
     
@@ -58,12 +59,12 @@ import org.robovm.apple.security.*;
     @Method(selector = "object")
     public native NSObject getObject();
     @Method(selector = "userInfo")
-    public native NSDictionary<NSString, ?> getUserInfo();
+    public native NSDictionary<NSString, NSObject> getUserInfo();
     /**
      * @since Available in iOS 4.0 and later.
      */
     @Method(selector = "initWithName:object:userInfo:")
-    protected native @Pointer long initWithName$object$userInfo$(NSString name, NSObject object, NSDictionary<NSString, ?> userInfo);
+    protected native @Pointer long initWithName$object$userInfo$(NSString name, NSObject object, NSDictionary<NSString, NSObject> userInfo);
     @Method(selector = "encodeWithCoder:")
     public native void encode(NSCoder aCoder);
     /*</methods>*/

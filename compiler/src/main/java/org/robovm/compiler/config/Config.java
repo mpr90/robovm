@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -52,6 +53,9 @@ import org.robovm.compiler.clazz.Path;
 import org.robovm.compiler.llvm.DataLayout;
 import org.robovm.compiler.log.Logger;
 import org.robovm.compiler.plugin.CompilerPlugin;
+import org.robovm.compiler.plugin.Plugin;
+import org.robovm.compiler.plugin.PluginArgument;
+import org.robovm.compiler.plugin.LaunchPlugin;
 import org.robovm.compiler.plugin.annotation.AnnotationImplPlugin;
 import org.robovm.compiler.plugin.objc.ObjCBlockPlugin;
 import org.robovm.compiler.plugin.objc.ObjCMemberPlugin;
@@ -122,6 +126,8 @@ public class Config {
     private ArrayList<File> bootclasspath;
     @ElementList(required = false, entry = "classpathentry")
     private ArrayList<File> classpath;
+    @ElementList(required = false, entry = "argument")
+    private ArrayList<String> pluginArguments;
     @Element(required = false, name = "target")
     private TargetType targetType;
     
@@ -163,9 +169,17 @@ public class Config {
     private List<Path> resourcesPaths = new ArrayList<Path>();
     private DataLayout dataLayout;
     private MarshalerLookup marshalerLookup;
-    private List<CompilerPlugin> compilerPlugins = new ArrayList<>();
+    private List<Plugin> plugins = new ArrayList<>();
 
-    protected Config() {
+    protected Config() throws IOException {
+        // Add standard plugins
+        this.plugins.addAll(0, Arrays.asList(
+                new ObjCProtocolProxyPlugin(),
+                new ObjCBlockPlugin(),
+                new ObjCMemberPlugin(),
+                new AnnotationImplPlugin()
+                ));
+        this.loadPluginsFromClassPath();
     }
     
     public Home getHome() {
@@ -329,8 +343,32 @@ public class Config {
     }
     
     public List<CompilerPlugin> getCompilerPlugins() {
+        List<CompilerPlugin> compilerPlugins = new ArrayList<>();
+        for (Plugin plugin : plugins) {
+            if (plugin instanceof CompilerPlugin) {
+                compilerPlugins.add((CompilerPlugin) plugin);
+            }
+        }
         return compilerPlugins;
     }
+
+    public List<LaunchPlugin> getLaunchPlugins() {
+        List<LaunchPlugin> launchPlugins = new ArrayList<>();
+        for (Plugin plugin : plugins) {
+            if (plugin instanceof LaunchPlugin) {
+                launchPlugins.add((LaunchPlugin) plugin);
+            }
+        }
+        return launchPlugins;
+    }
+    
+    public List<Plugin> getPlugins() {
+        return plugins;
+    }
+    
+    public List<String> getPluginArguments() {
+        return pluginArguments;
+    }        
     
     public List<File> getBootclasspath() {
         return bootclasspath;
@@ -565,7 +603,11 @@ public class Config {
                 String value;
                 for (int i = 1; (value = p.getProperty("compiler.plugin." + i)) != null; i++) {
                     Class<CompilerPlugin> c = (Class<CompilerPlugin>) getClass().getClassLoader().loadClass(value);
-                    compilerPlugins.add(c.newInstance());
+                    plugins.add(c.newInstance());
+                }
+                for (int i = 1; (value = p.getProperty("launch.plugin." + i)) != null; i++) {
+                    Class<LaunchPlugin> c = (Class<LaunchPlugin>) getClass().getClassLoader().loadClass(value);
+                    plugins.add(c.newInstance());
                 }
             }
         } catch (ClassNotFoundException e) {
@@ -653,16 +695,7 @@ public class Config {
         cacheDir = new File(archDir, debug ? "debug" : "release");
         cacheDir.mkdirs();
 
-        this.clazzes = new Clazzes(this, realBootclasspath, classpath);
-
-        // Add standard plugins
-        compilerPlugins.addAll(0, Arrays.asList(
-            new ObjCProtocolProxyPlugin(),
-            new ObjCBlockPlugin(),
-            new ObjCMemberPlugin(),
-            new AnnotationImplPlugin()
-        ));
-        loadPluginsFromClassPath();
+        this.clazzes = new Clazzes(this, realBootclasspath, classpath);        
 
         mergeConfigsFromClasspath();
         
@@ -822,12 +855,12 @@ public class Config {
             File rtClasses = new File(dir, "rt/target/classes/");
             File rtSource = rtJar;
             if (!rtJar.exists() || rtJar.isDirectory()) {
-            	if(!rtClasses.exists() || rtClasses.isFile()) {
-                throw new IllegalArgumentException(error 
-                        + "rt/target/" + rtJarName + " missing or invalid");
-            	} else {
-            		rtSource = rtClasses;
-            	}
+                if (!rtClasses.exists() || rtClasses.isFile()) {
+                    throw new IllegalArgumentException(error
+                            + "rt/target/" + rtJarName + " missing or invalid");
+                } else {
+                    rtSource = rtClasses;
+                }
             }
 
             return new Home(dir, binDir, vmBinariesDir, rtSource);
@@ -837,7 +870,7 @@ public class Config {
     public static class Builder {
         final Config config;
         
-        public Builder() {
+        public Builder() throws IOException {
             this.config = new Config();
         }
         
@@ -1150,8 +1183,20 @@ public class Config {
         }
 
         public Builder addCompilerPlugin(CompilerPlugin compilerPlugin) {
-            config.compilerPlugins.add(compilerPlugin);
+            config.plugins.add(compilerPlugin);
             return this;
+        }
+        
+        public Builder addLaunchPlugin(LaunchPlugin plugin) {
+            config.plugins.add(plugin);
+            return this;
+        }
+        
+        public void addPluginArgument(String argName) {
+            if(config.pluginArguments == null) {
+                config.pluginArguments = new ArrayList<>();
+            }
+            config.pluginArguments.add(argName);
         }
         
         public Config build() throws IOException {
@@ -1231,6 +1276,24 @@ public class Config {
             registry.bind(Resource.class, new ResourceConverter(fileConverter, resourceSerializer));
             
             return serializer;
+        }
+        
+        /**
+         * Fetches the {@link PluginArgument}s of all registered plugins
+         * for parsing.
+         */
+        public Map<String, PluginArgument> fetchPluginArguments() {
+            Map<String, PluginArgument> args = new TreeMap<>();
+            for (Plugin plugin : config.plugins) {
+                for (PluginArgument arg : plugin.getArguments().getArguments()) {
+                    args.put(plugin.getArguments().getPrefix() + ":" + arg.getName(), arg);
+                }
+            }
+            return args;
+        }
+
+        public List<Plugin> getPlugins() {
+            return config.getPlugins();
         }
     }
 

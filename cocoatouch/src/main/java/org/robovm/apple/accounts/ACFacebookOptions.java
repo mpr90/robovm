@@ -62,6 +62,7 @@ import org.robovm.apple.foundation.*;
     /**
      * @since Available in iOS 6.0 and later.
      */
+    @SuppressWarnings("unchecked")
     public String[] getPermissions() {
         String[] permissions = new String[0];
         if (data.containsKey(PermissionsKey())) {
@@ -74,7 +75,7 @@ import org.robovm.apple.foundation.*;
      * @since Available in iOS 6.0 and later.
      */
     public void setPermissions(String...permissions) {
-        NSArray<NSString> p = NSArray.toNSArray(permissions);
+        NSArray<NSString> p = NSArray.fromStrings(permissions);
         data.put(PermissionsKey(), p);
     }
     /**

@@ -41,18 +41,24 @@ import org.robovm.apple.corefoundation.*;
     /*</ptr>*/
     /*<bind>*/static { Bro.bind(ABPersonURLLabel.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
-    public static final ABPersonURLLabel HomePage = new ABPersonURLLabel() {
-        public CFString value() {
-            return HomePageLabel();
-        }
-    };
+    public static final ABPersonURLLabel HomePage = new ABPersonURLLabel("HomePageLabel");
+    private static ABPropertyLabel[] values = new ABPropertyLabel[] {Work, Home, Other, HomePage};
     
-    private ABPersonURLLabel() {
-        values = new ABPropertyLabel[] {Work, Home, Other, HomePage};
+    private ABPersonURLLabel(String getterName) {
+        super(getterName);
     }
     /*<constructors>*//*</constructors>*/
     /*<properties>*//*</properties>*/
     /*<members>*//*</members>*/
+    public static ABPropertyLabel valueOf(CFString value) {
+        for (ABPropertyLabel v : values) {
+            if (v.value().equals(value)) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("No constant with value " + value + " found in " 
+            + /*<name>*/ABPersonURLLabel/*</name>*/.class.getName());
+    }
     /*<methods>*/
     @GlobalValue(symbol="kABPersonHomePageLabel", optional=true)
     protected static native CFString HomePageLabel();

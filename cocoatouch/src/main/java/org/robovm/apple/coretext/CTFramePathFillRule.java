@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.foundation;
+package org.robovm.apple.coretext;
 
 /*<imports>*/
 import java.io.*;
@@ -26,53 +26,37 @@ import org.robovm.rt.*;
 import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
+import org.robovm.apple.foundation.*;
 import org.robovm.apple.corefoundation.*;
-import org.robovm.apple.security.*;
+import org.robovm.apple.coregraphics.*;
 /*</imports>*/
 
 /*<javadoc>*/
 
 /*</javadoc>*/
-/*<annotations>*//*</annotations>*/
-public enum /*<name>*/NSStringEncodings/*</name>*/ implements ValuedEnum {
+/*<annotations>*/@Marshaler(ValuedEnum.AsMachineSizedUIntMarshaler.class)/*</annotations>*/
+public enum /*<name>*/CTFramePathFillRule/*</name>*/ implements ValuedEnum {
     /*<values>*/
-    ASCII(1L),
-    NEXTSTEP(2L),
-    JapaneseEUC(3L),
-    UTF8(4L),
-    ISOLatin1(5L),
-    Symbol(6L),
-    NonLossyASCII(7L),
-    ShiftJIS(8L),
-    ISOLatin2(9L),
-    Unicode(10L),
-    WindowsCP1251(11L),
-    WindowsCP1252(12L),
-    WindowsCP1253(13L),
-    WindowsCP1254(14L),
-    WindowsCP1250(15L),
-    ISO2022JP(21L),
-    MacOSRoman(30L),
-    UTF16(10L),
-    UTF16BigEndian(-1879047936L),
-    UTF16LittleEndian(-1811939072L),
-    UTF32(-1946156800L),
-    UTF32BigEndian(-1744830208L),
-    UTF32LittleEndian(-1677721344L),
-    Proprietary(65536L);
+    EvenOdd(0L),
+    WindingNumber(1L);
     /*</values>*/
+
+    /*<bind>*/
+    /*</bind>*/
+    /*<constants>*//*</constants>*/
+    /*<methods>*//*</methods>*/
 
     private final long n;
 
-    private /*<name>*/NSStringEncodings/*</name>*/(long n) { this.n = n; }
+    private /*<name>*/CTFramePathFillRule/*</name>*/(long n) { this.n = n; }
     public long value() { return n; }
-    public static /*<name>*/NSStringEncodings/*</name>*/ valueOf(long n) {
-        for (/*<name>*/NSStringEncodings/*</name>*/ v : values()) {
+    public static /*<name>*/CTFramePathFillRule/*</name>*/ valueOf(long n) {
+        for (/*<name>*/CTFramePathFillRule/*</name>*/ v : values()) {
             if (v.n == n) {
                 return v;
             }
         }
         throw new IllegalArgumentException("No constant with value " + n + " found in " 
-            + /*<name>*/NSStringEncodings/*</name>*/.class.getName());
+            + /*<name>*/CTFramePathFillRule/*</name>*/.class.getName());
     }
 }

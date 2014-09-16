@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.social;
+package org.robovm.apple.passkit;
 
 /*<imports>*/
 import java.io.*;
@@ -28,43 +28,57 @@ import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
 import org.robovm.apple.uikit.*;
-import org.robovm.apple.accounts.*;
 /*</imports>*/
 
 /*<javadoc>*/
 /*</javadoc>*/
-/*<annotations>*/@Library("Social") @Marshaler(NSString.AsStringMarshaler.class)/*</annotations>*/
-/*<visibility>*/public/*</visibility>*/ class /*<name>*/Social/*</name>*/ 
+/*<annotations>*/@Library("PassKit")/*</annotations>*/
+/*<visibility>*/public/*</visibility>*/ class /*<name>*/PKRemovedPassInfo/*</name>*/ 
     extends /*<extends>*/Object/*</extends>*/ 
     /*<implements>*//*</implements>*/ {
 
     /*<ptr>*/
     /*</ptr>*/
-    /*<bind>*/static { Bro.bind(Social.class); }/*</bind>*/
+    /*<bind>*/static { Bro.bind(PKRemovedPassInfo.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
+    private NSDictionary<NSString, ?> data;
+    
+    protected PKRemovedPassInfo (NSDictionary<NSString, ?> data) {
+        this.data = data;
+    }
     /*<constructors>*//*</constructors>*/
     /*<properties>*//*</properties>*/
     /*<members>*//*</members>*/
+    /**
+     * @since Available in iOS 6.0 and later.
+     */
+    public String getPassTypeIdentifier() {
+        if (data.containsKey(PassTypeIdentifierKey())) {
+            NSString val = (NSString)data.get(PassTypeIdentifierKey());
+            return val.toString();
+        }
+        return null;
+    }
+    /**
+     * @since Available in iOS 6.0 and later.
+     */
+    public String getSerialNumber() {
+        if (data.containsKey(SerialNumberKey())) {
+            NSString val = (NSString)data.get(SerialNumberKey());
+            return val.toString();
+        }
+        return null;
+    }
     /*<methods>*/
     /**
      * @since Available in iOS 6.0 and later.
      */
-    @GlobalValue(symbol="SLServiceTypeTwitter", optional=true)
-    public static native NSString ServiceTypeTwitter();
+    @GlobalValue(symbol="PKPassLibraryPassTypeIdentifierUserInfoKey", optional=true)
+    protected static native NSString PassTypeIdentifierKey();
     /**
      * @since Available in iOS 6.0 and later.
      */
-    @GlobalValue(symbol="SLServiceTypeFacebook", optional=true)
-    public static native NSString ServiceTypeFacebook();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="SLServiceTypeSinaWeibo", optional=true)
-    public static native NSString ServiceTypeSinaWeibo();
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="SLServiceTypeTencentWeibo", optional=true)
-    public static native NSString ServiceTypeTencentWeibo();
+    @GlobalValue(symbol="PKPassLibrarySerialNumberUserInfoKey", optional=true)
+    protected static native NSString SerialNumberKey();
     /*</methods>*/
 }

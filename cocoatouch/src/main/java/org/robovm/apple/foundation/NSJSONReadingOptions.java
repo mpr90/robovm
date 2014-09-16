@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,6 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Marshaler(Bits.AsMachineSizedIntMarshaler.class)/*</annotations>*/
 public final class /*<name>*/NSJSONReadingOptions/*</name>*/ extends Bits</*<name>*/NSJSONReadingOptions/*</name>*/> {
     /*<values>*/
+    public static final NSJSONReadingOptions None = new NSJSONReadingOptions(0L);
     public static final NSJSONReadingOptions MutableContainers = new NSJSONReadingOptions(1L);
     public static final NSJSONReadingOptions MutableLeaves = new NSJSONReadingOptions(2L);
     public static final NSJSONReadingOptions AllowFragments = new NSJSONReadingOptions(4L);

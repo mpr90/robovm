@@ -19,6 +19,7 @@ package org.robovm.apple.foundation;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
+
 import org.robovm.objc.*;
 import org.robovm.objc.annotation.*;
 import org.robovm.objc.block.*;
@@ -27,6 +28,11 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.coregraphics.CGAffineTransform;
+import org.robovm.apple.coregraphics.CGPoint;
+import org.robovm.apple.coregraphics.CGRect;
+import org.robovm.apple.coregraphics.CGSize;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -59,21 +65,72 @@ import org.robovm.apple.security.*;
         return valueWithBytes$objCType$(value, p);
     }
 
+    public VoidPtr getValue() {
+        VoidPtr ptr = new VoidPtr();
+        getValue(ptr);
+        return ptr;
+    }
+    
+    /* UIKit NSValue Extensions */
+    public @ByVal CGPoint pointValue() {
+        return NSValueExtensions.getPointValue(this);
+    }
+    public @ByVal CGSize sizeValue() {
+        return NSValueExtensions.getSizeValue(this);
+    }
+    public @ByVal CGRect rectValue() {
+        return NSValueExtensions.getRectValue(this);
+    }
+    public @ByVal CGAffineTransform affineTransformValue() {
+        return NSValueExtensions.getAffineTransformValue(this);
+    }
+    public @ByVal UIEdgeInsets edgeInsetsValue() {
+        return NSValueExtensions.getEdgeInsetsValue(this);
+    }
+    /**
+     * @since Available in iOS 5.0 and later.
+     */
+    public @ByVal UIOffset offsetValue() {
+        return NSValueExtensions.getOffsetValue(this);
+    }
+
+    public static NSValue valueOf(@ByVal CGPoint point) {
+        return NSValueExtensions.create(point);
+    }
+    public static NSValue valueOf(@ByVal CGSize size) {
+        return NSValueExtensions.create(size);
+    }
+    public static NSValue valueOf(@ByVal CGRect rect) {
+        return NSValueExtensions.create(rect);
+    }
+    public static NSValue valueOf(@ByVal CGAffineTransform transform) {
+        return NSValueExtensions.create(transform);
+    }
+    public static NSValue valueOf(@ByVal UIEdgeInsets insets) {
+        return NSValueExtensions.create(insets);
+    }
+    /**
+     * @since Available in iOS 5.0 and later.
+     */
+    public static NSValue valueOf(@ByVal UIOffset insets) {
+        return NSValueExtensions.create(insets);
+    }
+    
     /*<methods>*/
     @Method(selector = "getValue:")
-    public native void storeValueAtAddress(VoidPtr value);
+    protected native void getValue(VoidPtr value);
     @Method(selector = "objCType")
     protected native BytePtr objCType();
     @Method(selector = "valueWithBytes:objCType:")
     protected static native NSValue valueWithBytes$objCType$(VoidPtr value, BytePtr type);
     @Method(selector = "nonretainedObjectValue")
-    public native NSObject nonretainedObjectValue();
+    public native NSObject objectValue();
     @Method(selector = "pointerValue")
     public native VoidPtr pointerValue();
     @Method(selector = "isEqualToValue:")
     public native boolean isEqualTo(NSValue value);
     @Method(selector = "valueWithNonretainedObject:")
-    public static native NSValue valueOfNonretainedObject(NSObject anObject);
+    public static native NSValue valueOf(NSObject anObject);
     @Method(selector = "valueWithPointer:")
     public static native NSValue valueOf(VoidPtr pointer);
     @Method(selector = "rangeValue")

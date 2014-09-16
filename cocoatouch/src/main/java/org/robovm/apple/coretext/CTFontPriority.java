@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.gamecontroller;
+package org.robovm.apple.coretext;
 
 /*<imports>*/
 import java.io.*;
@@ -27,26 +27,40 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
+import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.coregraphics.*;
 /*</imports>*/
 
 /*<javadoc>*/
-/*</javadoc>*/
-/*<annotations>*/@Library("GameController") @Marshaler(NSString.AsStringMarshaler.class)/*</annotations>*/
-/*<visibility>*/public/*</visibility>*/ class /*<name>*/GameController/*</name>*/ 
-    extends /*<extends>*/Object/*</extends>*/ 
-    /*<implements>*//*</implements>*/ {
 
-    /*<ptr>*/
-    /*</ptr>*/
-    /*<bind>*/static { Bro.bind(GameController.class); }/*</bind>*/
+/*</javadoc>*/
+/*<annotations>*/@Marshaler(ValuedEnum.AsMachineSizedUIntMarshaler.class)/*</annotations>*/
+public enum /*<name>*/CTFontPriority/*</name>*/ implements ValuedEnum {
+    /*<values>*/
+    System(10000L),
+    Network(20000L),
+    Computer(30000L),
+    User(40000L),
+    Dynamic(50000L),
+    Process(60000L);
+    /*</values>*/
+
+    /*<bind>*/
+    /*</bind>*/
     /*<constants>*//*</constants>*/
-    /*<constructors>*//*</constructors>*/
-    /*<properties>*//*</properties>*/
-    /*<members>*//*</members>*/
-    /*<methods>*/
-    @GlobalValue(symbol="GCControllerDidConnectNotification", optional=true)
-    public static native NSString ControllerDidConnectNotification();
-    @GlobalValue(symbol="GCControllerDidDisconnectNotification", optional=true)
-    public static native NSString ControllerDidDisconnectNotification();
-    /*</methods>*/
+    /*<methods>*//*</methods>*/
+
+    private final long n;
+
+    private /*<name>*/CTFontPriority/*</name>*/(long n) { this.n = n; }
+    public long value() { return n; }
+    public static /*<name>*/CTFontPriority/*</name>*/ valueOf(long n) {
+        for (/*<name>*/CTFontPriority/*</name>*/ v : values()) {
+            if (v.n == n) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("No constant with value " + n + " found in " 
+            + /*<name>*/CTFontPriority/*</name>*/.class.getName());
+    }
 }

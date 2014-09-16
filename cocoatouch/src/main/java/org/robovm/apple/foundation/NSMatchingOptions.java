@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,6 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Marshaler(Bits.AsMachineSizedIntMarshaler.class)/*</annotations>*/
 public final class /*<name>*/NSMatchingOptions/*</name>*/ extends Bits</*<name>*/NSMatchingOptions/*</name>*/> {
     /*<values>*/
+    public static final NSMatchingOptions None = new NSMatchingOptions(0L);
     public static final NSMatchingOptions ReportProgress = new NSMatchingOptions(1L);
     public static final NSMatchingOptions ReportCompletion = new NSMatchingOptions(2L);
     public static final NSMatchingOptions Anchored = new NSMatchingOptions(4L);

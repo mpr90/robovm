@@ -43,36 +43,27 @@ import org.robovm.apple.foundation.*;
     /**
      * @since Available in iOS 6.0 and later.
      */
-    public static ACFacebookAudience Everyone = new ACFacebookAudience() {
-        public NSString value() {
-            return EveryoneValue();
-        }
-    };
+    public static final ACFacebookAudience Everyone = new ACFacebookAudience("EveryoneValue");
     /**
      * @since Available in iOS 6.0 and later.
      */
-    public static ACFacebookAudience Friends = new ACFacebookAudience() {
-        public NSString value() {
-            return FriendsValue();
-        }
-    };
+    public static final ACFacebookAudience Friends = new ACFacebookAudience("FriendsValue");
     /**
      * @since Available in iOS 6.0 and later.
      */
-    public static ACFacebookAudience OnlyMe = new ACFacebookAudience() {
-        public NSString value() {
-            return OnlyMeValue();
-        }
-    };
+    public static final ACFacebookAudience OnlyMe = new ACFacebookAudience("OnlyMeValue");
     private static ACFacebookAudience[] values = new ACFacebookAudience[] {Everyone, Friends, OnlyMe};
     
-    private ACFacebookAudience() {
+    private final LazyGlobalValue<NSString> lazyGlobalValue;
+    
+    private ACFacebookAudience(String getterName) {
+        lazyGlobalValue = new LazyGlobalValue<>(getClass(), getterName);
     }
     /*<constructors>*//*</constructors>*/
     /*<properties>*//*</properties>*/
     /*<members>*//*</members>*/
     public NSString value() {
-        return null;
+        return lazyGlobalValue.value();
     }
     
     public static ACFacebookAudience valueOf(NSString value) {

@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,7 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Library("Foundation") @NativeClass/*</annotations>*/
 /*<visibility>*/public/*</visibility>*/ class /*<name>*/NSString/*</name>*/ 
     extends /*<extends>*/NSObject/*</extends>*/ 
-    /*<implements>*//*</implements>*/ {
+    /*<implements>*/implements NSPropertyList/*</implements>*/ {
 
     /*<ptr>*/public static class NSStringPtr extends Ptr<NSString, NSStringPtr> {}/*</ptr>*/
 
@@ -126,6 +127,10 @@ import org.robovm.apple.security.*;
         getCharacters$range$(VM.getArrayValuesAddress(chars), new NSRange(0, len));
         return VM.newStringNoCopy(chars, 0, len);
     }
+    
+    public static String getLocalizedString(String key) {
+        return NSBundle.getMainBundle().getLocalizedString(key, "", null);
+    }
 
     @Bridge protected static native @MachineSizedUInt long length(@Pointer long handle, Selector sel);
     @Bridge protected static native void getCharacters$range$(@Pointer long handle, Selector sel, @Pointer long buffer, @ByVal NSRange aRange);
@@ -141,5 +146,9 @@ import org.robovm.apple.security.*;
     protected native @Pointer long initWithCharacters$length$(@Pointer long characters, @MachineSizedUInt long length);
     @Method(selector = "stringWithCharacters:length:")
     protected static native @Pointer long stringWithCharacters$length$(@Pointer long characters, @MachineSizedUInt long length);
+    @Method(selector = "stringByAddingPercentEscapesUsingEncoding:")
+    protected native String stringByAddingPercentEscapesUsingEncoding$(NSStringEncoding enc);
+    @Method(selector = "stringByReplacingPercentEscapesUsingEncoding:")
+    protected native String stringByReplacingPercentEscapesUsingEncoding$(NSStringEncoding enc);
     /*</methods>*/
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.newsstandkit;
+package org.robovm.apple.uikit;
 
 /*<imports>*/
 import java.io.*;
@@ -27,24 +27,40 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
+import org.robovm.apple.coreanimation.*;
+import org.robovm.apple.coregraphics.*;
+import org.robovm.apple.coredata.*;
+import org.robovm.apple.coreimage.*;
 /*</imports>*/
 
 /*<javadoc>*/
-/*</javadoc>*/
-/*<annotations>*/@Library("NewsstandKit") @Marshaler(NSString.AsStringMarshaler.class)/*</annotations>*/
-/*<visibility>*/public/*</visibility>*/ class /*<name>*/NewsstandKit/*</name>*/ 
-    extends /*<extends>*/Object/*</extends>*/ 
-    /*<implements>*//*</implements>*/ {
 
-    /*<ptr>*/
-    /*</ptr>*/
-    /*<bind>*/static { Bro.bind(NewsstandKit.class); }/*</bind>*/
+/*</javadoc>*/
+/*<annotations>*//*</annotations>*/
+public enum /*<name>*/UILayoutPriority/*</name>*/ implements ValuedEnum {
+    /*<values>*/
+    Required(1000L),
+    DefaultHigh(750L),
+    DefaultLow(250L),
+    FittingSizeLevel(50L);
+    /*</values>*/
+
+    /*<bind>*/
+    /*</bind>*/
     /*<constants>*//*</constants>*/
-    /*<constructors>*//*</constructors>*/
-    /*<properties>*//*</properties>*/
-    /*<members>*//*</members>*/
-    /*<methods>*/
-    @GlobalValue(symbol="NKIssueDownloadCompletedNotification", optional=true)
-    public static native NSString IssueDownloadCompletedNotification();
-    /*</methods>*/
+    /*<methods>*//*</methods>*/
+
+    private final long n;
+
+    private /*<name>*/UILayoutPriority/*</name>*/(long n) { this.n = n; }
+    public long value() { return n; }
+    public static /*<name>*/UILayoutPriority/*</name>*/ valueOf(long n) {
+        for (/*<name>*/UILayoutPriority/*</name>*/ v : values()) {
+            if (v.n == n) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("No constant with value " + n + " found in " 
+            + /*<name>*/UILayoutPriority/*</name>*/.class.getName());
+    }
 }

@@ -41,6 +41,210 @@ import org.robovm.apple.coregraphics.*;
     extends /*<extends>*/NSObject/*</extends>*/ 
     /*<implements>*/implements MPMediaPlayback/*</implements>*/ {
 
+    public static class Notifications {
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeIsPreparedToPlayDidChange(MPMoviePlayerController object, final VoidBlock1<MPMediaPlayback> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(IsPreparedToPlayDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMediaPlayback) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeDurationAvailable(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(DurationAvailableNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeMediaTypesAvailable(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(MediaTypesAvailableNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeNaturalSizeAvailable(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(NaturalSizeAvailableNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeDidEnterFullscreen(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(DidEnterFullscreenNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeDidExitFullscreen(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(DidExitFullscreenNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 5.0 and later.
+         */
+        public static NSObject observeIsAirPlayVideoActiveDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(IsAirPlayVideoActiveDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeLoadStateDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(LoadStateDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeNowPlayingMovieDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(NowPlayingMovieDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        public static NSObject observePlaybackDidFinish(MPMoviePlayerController object, final VoidBlock3<MPMoviePlayerController, MPMovieFinishReason, NSError> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(PlaybackDidFinishNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    NSDictionary<NSString, ?> data = a.getUserInfo();
+                    NSNumber val = (NSNumber) data.get(PlaybackDidFinishReasonUserInfoKey());
+                    NSError error = (NSError) data.get(new NSString("error"));
+                    block.invoke((MPMoviePlayerController) a.getObject(), MPMovieFinishReason.valueOf(val.intValue()), error);
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observePlaybackStateDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(PlaybackStateDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeScalingModeDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(ScalingModeDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeThumbnailImageRequestDidFinish(MPMoviePlayerController object, final VoidBlock2<MPMoviePlayerController, MPMoviePlayerThumbnailRequest> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(ThumbnailImageRequestDidFinishNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject(), new MPMoviePlayerThumbnailRequest(a.getUserInfo()));
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeWillEnterFullscreen(MPMoviePlayerController object, final VoidBlock2<MPMoviePlayerController, MPMoviePlayerFullscreenAnimation> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(WillEnterFullscreenNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject(), new MPMoviePlayerFullscreenAnimation(a.getUserInfo()));
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeWillExitFullscreen(MPMoviePlayerController object, final VoidBlock2<MPMoviePlayerController, MPMoviePlayerFullscreenAnimation> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(WillExitFullscreenNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject(), new MPMoviePlayerFullscreenAnimation(a.getUserInfo()));
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 3.2 and later.
+         */
+        public static NSObject observeNewSourceTypeAvailable(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(SourceTypeAvailableNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 6.0 and later.
+         */
+        public static NSObject observeReadyForDisplayDidChange(MPMoviePlayerController object, final VoidBlock1<MPMoviePlayerController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(ReadyForDisplayDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke (NSNotification a) {
+                    block.invoke((MPMoviePlayerController) a.getObject());
+                }
+            });
+        }
+        /**
+         * @since Available in iOS 4.0 and later.
+         */
+        public static NSObject observeTimedMetadataUpdated(MPMoviePlayerController object, final VoidBlock2<MPMoviePlayerController, NSArray<MPTimedMetadata>> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(TimedMetadataUpdatedNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void invoke (NSNotification a) {
+                    NSDictionary<NSString, ?> userInfo = a.getUserInfo();
+                    NSArray<MPTimedMetadata> arr = (NSArray<MPTimedMetadata>) userInfo.get(TimedMetadataUserInfoKey());
+                    block.invoke((MPMoviePlayerController) a.getObject(), arr);
+                }
+            });
+        }
+    }
+    
     /*<ptr>*/public static class MPMoviePlayerControllerPtr extends Ptr<MPMoviePlayerController, MPMoviePlayerControllerPtr> {}/*</ptr>*/
     /*<bind>*/static { ObjCRuntime.bind(MPMoviePlayerController.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
@@ -158,7 +362,102 @@ import org.robovm.apple.coregraphics.*;
     public native void setCurrentPlaybackRate(float v);
     /*</properties>*/
     /*<members>*//*</members>*/
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMediaPlaybackIsPreparedToPlayDidChangeNotification", optional=true)
+    public static native NSString IsPreparedToPlayDidChangeNotification();
     /*<methods>*/
+    @GlobalValue(symbol="MPMoviePlayerScalingModeDidChangeNotification", optional=true)
+    public static native NSString ScalingModeDidChangeNotification();
+    @GlobalValue(symbol="MPMoviePlayerPlaybackDidFinishNotification", optional=true)
+    public static native NSString PlaybackDidFinishNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerPlaybackDidFinishReasonUserInfoKey", optional=true)
+    protected static native NSString PlaybackDidFinishReasonUserInfoKey();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerPlaybackStateDidChangeNotification", optional=true)
+    public static native NSString PlaybackStateDidChangeNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerLoadStateDidChangeNotification", optional=true)
+    public static native NSString LoadStateDidChangeNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerNowPlayingMovieDidChangeNotification", optional=true)
+    public static native NSString NowPlayingMovieDidChangeNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerWillEnterFullscreenNotification", optional=true)
+    public static native NSString WillEnterFullscreenNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerDidEnterFullscreenNotification", optional=true)
+    public static native NSString DidEnterFullscreenNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerWillExitFullscreenNotification", optional=true)
+    public static native NSString WillExitFullscreenNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerDidExitFullscreenNotification", optional=true)
+    public static native NSString DidExitFullscreenNotification();
+    /**
+     * @since Available in iOS 5.0 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification", optional=true)
+    public static native NSString IsAirPlayVideoActiveDidChangeNotification();
+    /**
+     * @since Available in iOS 6.0 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerReadyForDisplayDidChangeNotification", optional=true)
+    public static native NSString ReadyForDisplayDidChangeNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMovieMediaTypesAvailableNotification", optional=true)
+    public static native NSString MediaTypesAvailableNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMovieSourceTypeAvailableNotification", optional=true)
+    public static native NSString SourceTypeAvailableNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMovieDurationAvailableNotification", optional=true)
+    public static native NSString DurationAvailableNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMovieNaturalSizeAvailableNotification", optional=true)
+    public static native NSString NaturalSizeAvailableNotification();
+    /**
+     * @since Available in iOS 3.2 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerThumbnailImageRequestDidFinishNotification", optional=true)
+    public static native NSString ThumbnailImageRequestDidFinishNotification();
+    /**
+     * @since Available in iOS 4.0 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerTimedMetadataUpdatedNotification", optional=true)
+    public static native NSString TimedMetadataUpdatedNotification();
+    /**
+     * @since Available in iOS 4.0 and later.
+     */
+    @GlobalValue(symbol="MPMoviePlayerTimedMetadataUserInfoKey", optional=true)
+    protected static native NSString TimedMetadataUserInfoKey();
+    
     @Method(selector = "initWithContentURL:")
     protected native @Pointer long initWithContentURL$(NSURL url);
     @Method(selector = "setFullscreen:animated:")

@@ -1,5 +1,5 @@
 package: org.robovm.apple.foundation
-include: [corefoundation.yaml, security.yaml]
+include: [corefoundation.yaml, uikit.yaml, security.yaml]
 library: Foundation
 framework: Foundation
 path_match: ^.*/usr/include/objc/.*$
@@ -42,7 +42,7 @@ typedefs:
     'void (^)(NSData *)': '@Block VoidBlock1<NSData>'
     'void (^)(NSData *, NSURLResponse *, NSError *)': '@Block VoidBlock3<NSData, NSURLResponse, NSError>'
     'void (^)(NSDate *, BOOL, BOOL *)': '@Block VoidBlock3<NSDate, Boolean, BytePtr>'
-    'void (^)(NSDictionary *, NSRange, BOOL *)': '@Block("(,@ByVal,)") VoidBlock3<NSDictionary<NSString, ?>, NSRange, BytePtr>'
+    'void (^)(NSDictionary *, NSRange, BOOL *)': '@Block("(,@ByVal,)") VoidBlock3<NSDictionary<NSString, NSObject>, NSRange, BytePtr>'
     'void (^)(NSError *)': '@Block VoidBlock1<NSError>'
     'void (^)(NSFileHandle *)': '@Block VoidBlock1<NSFileHandle>'
     'void (^)(NSInputStream *)': '@Block VoidBlock1<NSInputStream>'
@@ -126,8 +126,8 @@ enums:
     NSStreamStatus: {}
     NSStringCompareOptions: { suffix: Search }
     NSStringEncodingConversionOptions: {}
-    NSStringEncodings: { first: NSASCIIStringEncoding, suffix: StringEncoding }
-    NSStringEncodings2: {first: NSProprietaryStringEncoding, merge_with: NSStringEncodings, prefix: NS, suffix: StringEncoding }
+    NSStringEncoding: { first: NSASCIIStringEncoding, suffix: StringEncoding }
+    NSStringEncoding2: {first: NSProprietaryStringEncoding, merge_with: NSStringEncoding, prefix: NS, suffix: StringEncoding }
     NSStringEnumerationOptions: {}
     NSTextCheckingType: {}
     NSTimeZoneNameStyle: {}
@@ -164,6 +164,7 @@ classes:
     NS.*Internal: { exclude: true }
 
     NSArray: # DONE
+        protocols: [NSPropertyList, "List<T>"]
         methods:
             "-initWithArray:":
                 visibility: protected
@@ -214,18 +215,22 @@ classes:
         methods:
             '-attribute:atIndex:effectiveRange:':
                 name: getAttribute
+                visibility: protected
                 parameters:
                     attrName:
                         type: NSString
             '-attribute:atIndex:longestEffectiveRange:inRange:':
                 name: getAttribute
+                visibility: protected
                 parameters:
                     attrName:
-                        type: NSString
+                        type: NSString    
             '-attributesAtIndex:effectiveRange:':
                 name: getAttributes
+                return_type: NSAttributedStringAttributes
             '-attributesAtIndex:longestEffectiveRange:inRange:':
                 name: getAttributes
+                return_type: NSAttributedStringAttributes
             '-attributedSubstringFromRange:':
                 name: substring
             '-length':
@@ -235,11 +240,13 @@ classes:
             '-initWithString:attributes:':
                 parameters:
                     attrs:
-                        type: "NSDictionary<NSString, ?>"
+                        type: NSAttributedStringAttributes
             '-enumerateAttributesInRange:options:usingBlock:':
-                name: enumerateAttributes
+                name: enumerateAttributes0
+                visibility: protected
             '-enumerateAttribute:inRange:options:usingBlock:':
-                trim_after_first_colon: true
+                name: enumerateAttribute0
+                visibility: protected
                 parameters:
                     attrName:
                         type: NSString
@@ -494,7 +501,6 @@ classes:
             '-systemVersion':
                 property: true
 
-
     NSComparisonPredicate: # DONE
         methods:
             '+predicateWithLeftExpression:rightExpression:modifier:type:options:': {exclude: true}
@@ -553,8 +559,8 @@ classes:
             '-.*': {exclude: true}
 
     NSData: # DONE
+        protocols: [NSPropertyList]
         methods:
-
             '-initWithData:':
             '-initWithBase64EncodedData:options:':
                 constructor: false
@@ -616,6 +622,7 @@ classes:
                     checkingTypes:
                         type: NSTextCheckingType
     NSDate: # DONE
+        protocols: [NSPropertyList]
         methods:
             '+timeIntervalSinceReferenceDate': {exclude: true}
             '+distant.*':
@@ -727,6 +734,7 @@ classes:
                 property: true
 
     NSDictionary: # DONE
+        protocols: [NSPropertyList, "Map<K, V>"]
         methods:
             "+dictionaryWithContentsOfFile:":
                 visibility: protected
@@ -1039,11 +1047,12 @@ classes:
                 trim_after_first_colon: true
                 parameters:
                     attrs:
-                        type: "NSDictionary<NSString, ?>"
+                        type: NSAttributedStringAttributes
             '-mutableString':
                 property: true
             '-addAttribute:value:range:':
                 trim_after_first_colon: true
+                visibility: protected
                 parameters:
                     name:
                         type: NSString
@@ -1051,9 +1060,10 @@ classes:
                 trim_after_first_colon: true
                 parameters:
                     attrs:
-                        type: "NSDictionary<NSString, ?>"
+                        type: NSAttributedStringAttributes
             '-removeAttribute:range:':
                 trim_after_first_colon: true
+                visibility: protected
                 parameters:
                     name:
                         type: NSString
@@ -1174,7 +1184,7 @@ classes:
                     object:
                         type: NSObject
                     userInfo:
-                        type: 'NSDictionary<NSString, ?>'
+                        type: 'NSDictionary<NSString, NSObject>'
             '-name':
                 property: true
                 return_type: NSString
@@ -1182,7 +1192,7 @@ classes:
                 property: true
             '-userInfo':
                 property: true
-                return_type: 'NSDictionary<NSString, ?>'
+                return_type: 'NSDictionary<NSString, NSObject>'
     NSNotificationCenter: # DONE
         methods:
             '+defaultCenter':
@@ -1246,6 +1256,7 @@ classes:
                 name: getNull
     NSNumber: # DONE
         skip_def_constructor: true
+        protocols: [NSPropertyList]
         methods:
             "+numberWithBool:":
                 name: valueOf
@@ -1583,6 +1594,9 @@ classes:
             "-objectEnumerator":
                 visibility: protected
                 return_type: NSEnumerator<T>
+            '-anyObject':
+                visibility: protected
+                return_type: T
 
             '+.*': {exclude: true}
             '-.*': {exclude: true}
@@ -1614,6 +1628,7 @@ classes:
                         type: NSString
 
     NSString: # DONE
+        protocols: [NSPropertyList]
         methods:
             '+stringWithCharacters:length:':
                 visibility: protected
@@ -1637,6 +1652,8 @@ classes:
                 parameters:
                     buffer:
                         type: "@Pointer long"
+            '-stringBy.*PercentEscapes.*':
+                visibility: protected
             '+.*': {exclude: true}
             '-.*': {exclude: true}
 
@@ -1797,9 +1814,65 @@ classes:
     NSURLSessionDownloadTask: {}
     NSURLSessionTask: {}
     NSURLSessionUploadTask: {}
-    NSUserDefaults:
+    NSUserDefaults: # DONE
         methods:
-
+            '-objectForKey:':
+                name: get
+            '-removeObjectForKey:':
+                name: remove
+            '-stringForKey:':
+                name: getString
+            '-arrayForKey:':
+                name: getArray
+            '-dictionaryForKey:':
+                name: getDictionary
+            '-dataForKey:':
+                name: getData
+            '-stringArrayForKey':
+                name: getStringArray
+                return_type: "NSArray<NSString>"
+            '-integerForKey:':
+                name: getInteger
+            '-floatForKey:':
+                name: getFloat
+            '-doubleForKey:':
+                name: getDouble
+            '-boolForKey:':
+                name: getBoolean
+            '-URLForKey:':
+                name: getURL
+            '-set.*':
+                visibility: protected
+            '-registerDefaults:':
+                trim_after_first_colon: true
+            '-addSuiteNamed:':
+                name: addSuite
+            '-removeSuiteNamed:':
+                name: removeSuite
+            '-dictionaryRepresentation':
+                name: asDictionary
+            '-volatileDomainNames':
+                property: true
+                return_type: "NSArray<NSString>"
+            '-volatileDomainForName:':
+                name: getVolatileDomain
+            '-setVolatileDomain:forName:':
+                visibility: protected
+            '-removeVolatileDomainForName:':
+                name: removeVolatileDomain
+            '-persistentDomainNames':
+                property: true
+                return_type: "NSArray<NSString>"
+            '-persistentDomainForName:':
+                name: getPersistentDomain
+            '-setPersistentDomain:forName:':
+                visibility: protected
+            '-removePersistentDomainForName:':
+                name: removePersistentDomain
+            '-objectIsForcedForKey.*':
+                name: isObjectForced
+            '+standardUserDefaults':
+                property: true
             '-init.*': {exclude: true}
 
     NSUUID: # DONE
@@ -1830,9 +1903,13 @@ classes:
             '+valueWithBytes:objCType:':
                 visibility: protected
             '+valueWithNonretainedObject:':
-                name: valueOfNonretainedObject
+                name: valueOf
+            '-nonretainedObjectValue':
+                name: objectValue
             '+valueWithPointer:':
                 name: valueOf
+            '-pointerValue':
+                name: pointerValue
             '+valueWithRange:':
                 name: valueOf
             '-initWithBytes:objCType:':
@@ -1840,7 +1917,8 @@ classes:
             '-isEqualToValue:':
                 name: isEqualTo
             '-getValue:':
-                name: storeValueAtAddress
+                name: getValue
+                visibility: protected
             '-objCType':
                 visibility: protected
     NSValueTransformer: {}

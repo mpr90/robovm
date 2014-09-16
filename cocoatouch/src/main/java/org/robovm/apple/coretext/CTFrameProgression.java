@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.robovm.apple.coretelephony;
+package org.robovm.apple.coretext;
 
 /*<imports>*/
 import java.io.*;
@@ -28,32 +28,36 @@ import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.foundation.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.coregraphics.*;
 /*</imports>*/
 
 /*<javadoc>*/
-/*</javadoc>*/
-/*<annotations>*/@Library("CoreTelephony") @Marshaler(NSString.AsStringMarshaler.class)/*</annotations>*/
-/*<visibility>*/public/*</visibility>*/ class /*<name>*/CoreTelephony/*</name>*/ 
-    extends /*<extends>*/Object/*</extends>*/ 
-    /*<implements>*//*</implements>*/ {
 
-    /*<ptr>*/
-    /*</ptr>*/
-    /*<bind>*/static { Bro.bind(CoreTelephony.class); }/*</bind>*/
+/*</javadoc>*/
+/*<annotations>*/@Marshaler(ValuedEnum.AsMachineSizedUIntMarshaler.class)/*</annotations>*/
+public enum /*<name>*/CTFrameProgression/*</name>*/ implements ValuedEnum {
+    /*<values>*/
+    TopToBottom(0L),
+    RightToLeft(1L),
+    LeftToRight(2L);
+    /*</values>*/
+
+    /*<bind>*/
+    /*</bind>*/
     /*<constants>*//*</constants>*/
-    /*<constructors>*//*</constructors>*/
-    /*<properties>*//*</properties>*/
-    /*<members>*//*</members>*/
-    /*<methods>*/
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="CTSubscriberTokenRefreshed", optional=true)
-    public static native String CTSubscriberTokenRefreshedNotification();
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="CTRadioAccessTechnologyDidChangeNotification", optional=true)
-    public static native String CTRadioAccessTechnologyDidChangeNotification();
-    /*</methods>*/
+    /*<methods>*//*</methods>*/
+
+    private final long n;
+
+    private /*<name>*/CTFrameProgression/*</name>*/(long n) { this.n = n; }
+    public long value() { return n; }
+    public static /*<name>*/CTFrameProgression/*</name>*/ valueOf(long n) {
+        for (/*<name>*/CTFrameProgression/*</name>*/ v : values()) {
+            if (v.n == n) {
+                return v;
+            }
+        }
+        throw new IllegalArgumentException("No constant with value " + n + " found in " 
+            + /*<name>*/CTFrameProgression/*</name>*/.class.getName());
+    }
 }

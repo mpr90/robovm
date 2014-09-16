@@ -37,6 +37,24 @@ import org.robovm.apple.foundation.*;
     extends /*<extends>*/NSObject/*</extends>*/ 
     /*<implements>*//*</implements>*/ {
 
+    public static class Notifications {
+        public static NSObject observeDidConnect(final VoidBlock1<GCController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(DidConnectNotification(), null, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke(NSNotification a) {
+                    block.invoke((GCController) a.getObject());
+                }
+            });
+        }
+        public static NSObject observeDidDisconnect(final VoidBlock1<GCController> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(DidDisconnectNotification(), null, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke(NSNotification a) {
+                    block.invoke((GCController) a.getObject());
+                }
+            });
+        }
+    }
     /*<ptr>*/public static class GCControllerPtr extends Ptr<GCController, GCControllerPtr> {}/*</ptr>*/
     /*<bind>*/static { ObjCRuntime.bind(GCController.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
@@ -64,6 +82,11 @@ import org.robovm.apple.foundation.*;
     /*</properties>*/
     /*<members>*//*</members>*/
     /*<methods>*/
+    @GlobalValue(symbol="GCControllerDidConnectNotification", optional=true)
+    public static native NSString DidConnectNotification();
+    @GlobalValue(symbol="GCControllerDidDisconnectNotification", optional=true)
+    public static native NSString DidDisconnectNotification();
+    
     @Method(selector = "controllers")
     public static native NSArray<GCController> getControllers();
     @Method(selector = "startWirelessControllerDiscoveryWithCompletionHandler:")

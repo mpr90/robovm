@@ -19,6 +19,7 @@ package org.robovm.apple.foundation;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
+
 import org.robovm.objc.*;
 import org.robovm.objc.annotation.*;
 import org.robovm.objc.block.*;
@@ -27,6 +28,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -166,6 +168,49 @@ import org.robovm.apple.security.*;
     public <U> U[] toArray(U[] a) {
         return adapter.toArray(a);
     }
+    public T any() {
+        return anyObject();
+    }
+    
+    /**
+     * Use this method to convert a NSSet of NSString items to a Set of String items. 
+     * Elements of this NSASet must be of type NSString, otherwise an exception will be thrown.
+     * @return
+     * @throws UnsupportedOperationException when the set items are not of type NSString.
+     */
+    public Set<String> asStringSet() {
+        Set<String> set = new HashSet<>();
+        if (size() == 0) 
+            return set;
+        if (!(any() instanceof NSString)) 
+            throw new UnsupportedOperationException("items must be of type NSString");
+        
+        for (T str : this) {
+            set.add(str.toString());
+        }
+        return set;
+    }
+    
+    public static NSSet<NSString> fromStrings (String... strings) {
+        int length = strings.length;
+        NSString[] nsStrings = new NSString[length];
+
+        for (int i = 0; i < length; i++) {
+            nsStrings[i] = new NSString(strings[i]);
+        }
+        return new NSSet<NSString>(nsStrings);
+    }
+
+    public static NSSet<NSString> fromStrings (Collection<String> strings) {
+        NSString[] nsStrings = new NSString[strings.size()];
+
+        int i = 0;
+        for (String s : strings) {
+            nsStrings[i] = new NSString(s);
+            i++;
+        }
+        return new NSSet<NSString>(nsStrings);
+    }
     
     /*<methods>*/
     @Method(selector = "count")
@@ -174,6 +219,8 @@ import org.robovm.apple.security.*;
     protected native NSObject member$(NSObject object);
     @Method(selector = "objectEnumerator")
     protected native NSEnumerator<T> objectEnumerator();
+    @Method(selector = "anyObject")
+    protected native T anyObject();
     @Method(selector = "initWithObjects:count:")
     protected native @Pointer long initWithObjects$count$(@Pointer long objects, @MachineSizedUInt long cnt);
     @Method(selector = "initWithSet:")

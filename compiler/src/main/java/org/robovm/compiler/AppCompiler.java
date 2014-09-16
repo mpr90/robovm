@@ -52,6 +52,9 @@ import org.robovm.compiler.config.Config.TargetType;
 import org.robovm.compiler.config.OS;
 import org.robovm.compiler.config.Resource;
 import org.robovm.compiler.log.ConsoleLogger;
+import org.robovm.compiler.plugin.CompilerPlugin;
+import org.robovm.compiler.plugin.Plugin;
+import org.robovm.compiler.plugin.PluginArgument;
 import org.robovm.compiler.target.LaunchParameters;
 import org.robovm.compiler.target.ios.IOSSimulatorLaunchParameters;
 import org.robovm.compiler.target.ios.IOSSimulatorLaunchParameters.Family;
@@ -333,6 +336,7 @@ public class AppCompiler {
     public static void main(String[] args) throws IOException {
         
         AppCompiler compiler = null;
+        Config.Builder builder = null;
         
         boolean verbose = false;
         boolean run = false;
@@ -341,8 +345,9 @@ public class AppCompiler {
         List<String> runArgs = new ArrayList<String>();
         List<String> launchArgs = new ArrayList<String>();
         try {
-            Config.Builder builder = new Config.Builder();
-            
+            builder = new Config.Builder();
+            Map<String, PluginArgument> pluginArguments = builder.fetchPluginArguments();
+ 
             int i = 0;
             while (i < args.length) {
                 if ("-cp".equals(args[i]) || "-classpath".equals(args[i])) {
@@ -409,7 +414,7 @@ public class AppCompiler {
                 } else if ("-clean".equals(args[i])) {
                     builder.clean(true);
                 } else if ("-help".equals(args[i]) || "-?".equals(args[i])) {
-                    printUsageAndExit(null);
+                    printUsageAndExit(null, builder.getPlugins());
                 } else if ("-version".equals(args[i])) {
                     printVersionAndExit();
                 } else if ("-cc".equals(args[i])) {
@@ -492,7 +497,16 @@ public class AppCompiler {
                 } else if (args[i].startsWith("-rvm:")) {
                     runArgs.add(args[i]);
                 } else if (args[i].startsWith("-")) {
-                    throw new IllegalArgumentException("Unrecognized option: " + args[i]);
+                    String argName = args[i].substring(1, args[i].length());
+                    if(argName.contains("=")) {
+                        argName = argName.substring(0, argName.indexOf('='));
+                    }
+                    PluginArgument arg = pluginArguments.get(argName);
+                    if (arg != null) {
+                        builder.addPluginArgument(args[i].substring(1));                        
+                    } else {
+                        throw new IllegalArgumentException("Unrecognized option: " + args[i]);
+                    }
                 } else {
                     builder.mainClass(args[i++]);
                     break;
@@ -545,7 +559,7 @@ public class AppCompiler {
             if (verbose && !(t instanceof StringIndexOutOfBoundsException) && !(t instanceof IllegalArgumentException)) {
                 t.printStackTrace();
             }
-            printUsageAndExit(message);            
+            printUsageAndExit(message, builder.getPlugins());
         }
         
         try {
@@ -595,7 +609,7 @@ public class AppCompiler {
             if (verbose && !(t instanceof ExecuteException)) {
                 t.printStackTrace();
             }
-            printUsageAndExit(message);
+            printUsageAndExit(message, builder.getPlugins());
         }
     }
     
@@ -604,10 +618,11 @@ public class AppCompiler {
         System.exit(0);
     }
     
-    private static void printUsageAndExit(String errorMessage) {
+    private static void printUsageAndExit(String errorMessage, List<Plugin> plugins) {
         if (errorMessage != null) {
             System.err.format("robovm: %s\n", errorMessage);
         }
+        // @formatter:off 
         System.err.println("Usage: robovm [-options] class [run-args]");
         System.err.println("   or  robovm [-options] -jar jarfile [run-args]");
         System.err.println("Options:");
@@ -736,8 +751,30 @@ public class AppCompiler {
         System.err.println("  -ios-sim-sdk <sdk>    The iOS SDK version to run the application on (defaults to\n" 
                          + "                        the latest).");
         
+        if(plugins != null) {
+            for(Plugin plugin: plugins) {
+                if(plugin.getArguments().getArguments().size() > 0) {
+                    System.err.println(plugin.getClass().getSimpleName() + " options:");
+                    for(PluginArgument arg: plugin.getArguments().getArguments()) {
+                        String argString = "  -" + plugin.getArguments().getPrefix() + ":" + arg.getName() + (arg.hasValue()? " " + arg.getValueName(): "");
+                        int whitespace = Math.max(1, 24 - argString.length());
+                        System.err.println(argString + repeat(" ", whitespace) + arg.getDescription());
+                    }
+                }
+            }
+        }
         System.exit(errorMessage != null ? 1 : 0);
+        // @formatter:on
     }
+    
+    private static String repeat(String s, int n) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            builder.append(s);
+        }
+        return builder.toString();
+    }
+
     
     private class UpdateChecker extends Thread {
         private final String address;

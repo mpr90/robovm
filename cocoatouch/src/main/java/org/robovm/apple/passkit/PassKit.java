@@ -48,36 +48,6 @@ import org.robovm.apple.uikit.*;
     /**
      * @since Available in iOS 6.0 and later.
      */
-    @GlobalValue(symbol="PKPassLibraryDidChangeNotification", optional=true)
-    public static native NSString PassLibraryDidChangeNotification();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="PKPassLibraryAddedPassesUserInfoKey", optional=true)
-    public static native NSString PassLibraryAddedPassesUserInfoKey();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="PKPassLibraryReplacementPassesUserInfoKey", optional=true)
-    public static native NSString PassLibraryReplacementPassesUserInfoKey();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="PKPassLibraryRemovedPassInfosUserInfoKey", optional=true)
-    public static native NSString PassLibraryRemovedPassInfosUserInfoKey();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="PKPassLibraryPassTypeIdentifierUserInfoKey", optional=true)
-    public static native NSString PassLibraryPassTypeIdentifierUserInfoKey();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="PKPassLibrarySerialNumberUserInfoKey", optional=true)
-    public static native NSString PassLibrarySerialNumberUserInfoKey();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
     @GlobalValue(symbol="PKPassKitErrorDomain", optional=true)
     public static native NSString PassKitErrorDomain();
     @GlobalValue(symbol="PKErrorDomain", optional=true)

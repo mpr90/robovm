@@ -27,6 +27,7 @@ import org.robovm.rt.bro.*;
 import org.robovm.rt.bro.annotation.*;
 import org.robovm.rt.bro.ptr.*;
 import org.robovm.apple.corefoundation.*;
+import org.robovm.apple.uikit.*;
 import org.robovm.apple.security.*;
 /*</imports>*/
 
@@ -36,6 +37,7 @@ import org.robovm.apple.security.*;
 /*<annotations>*/@Marshaler(Bits.AsMachineSizedIntMarshaler.class)/*</annotations>*/
 public final class /*<name>*/NSPointerFunctionsOptions/*</name>*/ extends Bits</*<name>*/NSPointerFunctionsOptions/*</name>*/> {
     /*<values>*/
+    public static final NSPointerFunctionsOptions None = new NSPointerFunctionsOptions(0L);
     /**
      * @since Available in iOS 6.0 and later.
      */

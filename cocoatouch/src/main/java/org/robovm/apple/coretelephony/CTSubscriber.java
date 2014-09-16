@@ -40,6 +40,19 @@ import org.robovm.apple.corefoundation.*;
     extends /*<extends>*/NSObject/*</extends>*/ 
     /*<implements>*//*</implements>*/ {
 
+    public static class Notifications {
+        /**
+         * @since Available in iOS 7.0 and later.
+         */
+        public static NSObject observeTokenRefreshed(CTSubscriber object, final VoidBlock1<CTSubscriber> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(TokenRefreshedNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke(NSNotification a) {
+                    block.invoke((CTSubscriber) a.getObject());
+                }
+            });
+        }
+    }
     /*<ptr>*/public static class CTSubscriberPtr extends Ptr<CTSubscriber, CTSubscriberPtr> {}/*</ptr>*/
     /*<bind>*/static { ObjCRuntime.bind(CTSubscriber.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
@@ -56,6 +69,12 @@ import org.robovm.apple.corefoundation.*;
     /*</properties>*/
     /*<members>*//*</members>*/
     /*<methods>*/
+    /**
+     * @since Available in iOS 7.0 and later.
+     */
+    @GlobalValue(symbol="CTSubscriberTokenRefreshed", optional=true)
+    public static native NSString TokenRefreshedNotification();
+    
     
     /*</methods>*/
 }

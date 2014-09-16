@@ -47,34 +47,9 @@ import org.robovm.apple.accounts.*;
     /*<members>*//*</members>*/
     /*<methods>*/
     /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="SKDownloadTimeRemainingUnknown", optional=true)
-    public static native double DownloadTimeRemainingUnknown();
-    /**
      * @since Available in iOS 3.0 and later.
      */
     @GlobalValue(symbol="SKErrorDomain", optional=true)
     public static native NSString ErrorDomain();
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="SKReceiptPropertyIsExpired", optional=true)
-    public static native NSString ReceiptPropertyIsExpired();
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="SKReceiptPropertyIsRevoked", optional=true)
-    public static native NSString ReceiptPropertyIsRevoked();
-    /**
-     * @since Available in iOS 7.0 and later.
-     */
-    @GlobalValue(symbol="SKReceiptPropertyIsVolumePurchase", optional=true)
-    public static native NSString ReceiptPropertyIsVolumePurchase();
-    /**
-     * @since Available in iOS 6.0 and later.
-     */
-    @GlobalValue(symbol="SKStoreProductParameterITunesItemIdentifier", optional=true)
-    public static native NSString StoreProductParameterITunesItemIdentifier();
     /*</methods>*/
 }

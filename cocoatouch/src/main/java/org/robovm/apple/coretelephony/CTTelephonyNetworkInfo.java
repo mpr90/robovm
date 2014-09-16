@@ -40,6 +40,16 @@ import org.robovm.apple.corefoundation.*;
     extends /*<extends>*/NSObject/*</extends>*/ 
     /*<implements>*//*</implements>*/ {
 
+    public static class Notifications {
+        public static NSObject observeRadioAccessTechnologyDidChange(CTTelephonyNetworkInfo object, final VoidBlock1<CTTelephonyNetworkInfo> block) {
+            return NSNotificationCenter.getDefaultCenter().addObserver(RadioAccessTechnologyDidChangeNotification(), object, NSOperationQueue.getMainQueue(), new VoidBlock1<NSNotification>() {
+                @Override
+                public void invoke(NSNotification a) {
+                    block.invoke((CTTelephonyNetworkInfo) a.getObject());
+                }
+            });
+        }
+    }
     /*<ptr>*/public static class CTTelephonyNetworkInfoPtr extends Ptr<CTTelephonyNetworkInfo, CTTelephonyNetworkInfoPtr> {}/*</ptr>*/
     /*<bind>*/static { ObjCRuntime.bind(CTTelephonyNetworkInfo.class); }/*</bind>*/
     /*<constants>*//*</constants>*/
@@ -77,6 +87,12 @@ import org.robovm.apple.corefoundation.*;
     /*</properties>*/
     /*<members>*//*</members>*/
     /*<methods>*/
+    /**
+     * @since Available in iOS 7.0 and later.
+     */
+    @GlobalValue(symbol="CTRadioAccessTechnologyDidChangeNotification", optional=true)
+    public static native NSString RadioAccessTechnologyDidChangeNotification();
+    
     
     /*</methods>*/
 }

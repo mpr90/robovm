@@ -35,19 +35,34 @@ import org.robovm.apple.dispatch.*;
 /*<visibility>*/public/*</visibility>*/ class /*<name>*/CFBoolean/*</name>*/ 
     extends /*<extends>*/CFPropertyList/*</extends>*/ 
     /*<implements>*//*</implements>*/ {
-
+    
     /*<ptr>*/public static class CFBooleanPtr extends Ptr<CFBoolean, CFBooleanPtr> {}/*</ptr>*/
     /*<bind>*/static { Bro.bind(CFBoolean.class); }/*</bind>*/
+    
+    public static final CFBoolean TRUE = True();
+    public static final CFBoolean FALSE = False();
+    
     /*<constants>*//*</constants>*/
     /*<constructors>*/
     protected CFBoolean() {}
     /*</constructors>*/
     /*<properties>*//*</properties>*/
     /*<members>*//*</members>*/
+    public static CFBoolean valueOf(boolean b) {
+        if (b) {
+            return TRUE;
+        }
+        return FALSE;
+    }
     /*<methods>*/
+    @GlobalValue(symbol="kCFBooleanTrue", optional=true)
+    private static native CFBoolean True();
+    @GlobalValue(symbol="kCFBooleanFalse", optional=true)
+    private static native CFBoolean False();
+    
     @Bridge(symbol="CFBooleanGetTypeID", optional=true)
     public static native @MachineSizedUInt long getClassTypeID();
     @Bridge(symbol="CFBooleanGetValue", optional=true)
-    public native boolean getValue();
+    public native boolean booleanValue();
     /*</methods>*/
 }
